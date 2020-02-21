@@ -16,15 +16,16 @@ Note: You'll need to add the "Other" job role input directly into the HTML and h
 */
 const jobRoleSelect = document.querySelector('form select#title'),
 jobRoleOptions = jobRoleSelect.querySelectorAll('option'),
-textField = document.createElement('input, '),
-fieldSet = document.querySelector('fieldset');
+textField = document.querySelector('#other-field');
 
-fieldSet.appendChild(textField);
+textField.style.display = "none";
 
 jobRoleSelect.addEventListener("change", function(event) {
     for (var i = 0; i < jobRoleOptions.length; i++) {
         if (jobRoleOptions[i].selected && jobRoleOptions[i].text === "Other") {
-            console.log(jobRoleOptions[i].text + ' is selected');
+			textField.style.display = "block";
+        } else {
+        	textField.style.display = "none";
         }
     }
 })
