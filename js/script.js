@@ -4,9 +4,9 @@
 Set focus on the first text field
 When the page first loads, the first text field should be in focus by default.
 */
-const firstField = document.querySelector('form input');
+const firstTextField = document.querySelector('form input');
 
-firstField.focus();
+firstTextField.focus();
 
 /*
 ”Job Role” section
@@ -16,16 +16,16 @@ Note: You'll need to add the "Other" job role input directly into the HTML and h
 */
 const jobRoleSelect = document.querySelector('form select#title'),
 jobRoleOptions = jobRoleSelect.querySelectorAll('option'),
-textField = document.querySelector('#other-field');
+jobRoleTextField = document.querySelector('#other-field');
 
-textField.style.display = "none";
+jobRoleTextField.style.display = "none";
 
-jobRoleSelect.addEventListener("change", function(event) {
+jobRoleSelect.addEventListener("change", event => {
     for (var i = 0; i < jobRoleOptions.length; i++) {
         if (jobRoleOptions[i].selected && jobRoleOptions[i].text === "Other") {
-			textField.style.display = "block";
+			jobRoleTextField.style.display = "block";
         } else {
-        	textField.style.display = "none";
+        	jobRoleTextField.style.display = "none";
         }
     }
 })
