@@ -15,17 +15,17 @@ Give the field an id of “other-title,” and add the placeholder text of "Your
 Note: You'll need to add the "Other" job role input directly into the HTML and hide it initially with JS in order to get this feature to work when JS is disabled, which is a requirement below.
 */
 const jobRoleSelect = document.querySelector('form select#title'),
-jobRoleOptions = jobRoleSelect.querySelectorAll('option'),
-jobRoleTextField = document.querySelector('#other-field');
+    jobRoleOptions = jobRoleSelect.querySelectorAll('option'),
+    jobRoleTextField = document.querySelector('#other-field');
 
 jobRoleTextField.style.display = "none";
 
 jobRoleSelect.addEventListener("change", event => {
     for (var i = 0; i < jobRoleOptions.length; i++) {
         if (jobRoleOptions[i].selected && jobRoleOptions[i].text === "Other") {
-			jobRoleTextField.style.display = "block";
+            jobRoleTextField.style.display = "block";
         } else {
-        	jobRoleTextField.style.display = "none";
+            jobRoleTextField.style.display = "none";
         }
     }
 })
@@ -40,6 +40,23 @@ If the user selects "Theme - JS Puns" then the color menu should only display "C
 If the user selects "Theme - I ♥ JS" then the color menu should only display "Tomato," "Steel Blue," and "Dim Grey."
 When a new theme is selected from the "Design" menu, both the "Color" field and drop down menu is updated.
 */
+const designSelect = document.querySelector('form select#design'),
+	designOptions = designSelect.querySelectorAll('option'),
+	colorSelect = document.querySelector('form select#color'),
+	colorOptions = colorSelect.querySelectorAll('option');
+
+colorSelect.style.display = "none";
+
+designSelect.addEventListener("change", event => {
+
+	for (var i = 0; i < designOptions.length; i++) {
+		if (designOptions[i].selected && designOptions[i].text !== "Select Theme") {
+			colorSelect.style.display = "block"
+		} else if (designOptions[i].selected && designOptions[i].text === "Select Theme"){
+			colorSelect.style.display = "none"
+		};
+    }
+})
 
 /*
 ”Register for Activities” section
