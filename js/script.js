@@ -21,7 +21,7 @@ const jobRoleSelect = document.querySelector('form select#title'),
 jobRoleTextField.style.display = "none";
 
 jobRoleSelect.addEventListener("change", event => {
-    for (var i = 0; i < jobRoleOptions.length; i++) {
+    for (let i = 0; i < jobRoleOptions.length; i++) {
         if (jobRoleOptions[i].selected && jobRoleOptions[i].text === "Other") {
             jobRoleTextField.style.display = "block";
         } else {
@@ -41,20 +41,40 @@ If the user selects "Theme - I ♥ JS" then the color menu should only display "
 When a new theme is selected from the "Design" menu, both the "Color" field and drop down menu is updated.
 */
 const designSelect = document.querySelector('form select#design'),
-	designOptions = designSelect.querySelectorAll('option'),
-	colorSelect = document.querySelector('form select#color'),
-	colorOptions = colorSelect.querySelectorAll('option');
+    designOptions = designSelect.querySelectorAll('option'),
+    colorSelect = document.querySelector('form select#color'),
+    colorOptions = colorSelect.querySelectorAll('option'),
+    newColorOption = document.createElement('option');
 
-colorSelect.style.display = "none";
+    newColorOption.text = "Select color";
+
+
 
 designSelect.addEventListener("change", event => {
-
-	for (var i = 0; i < designOptions.length; i++) {
-		if (designOptions[i].selected && designOptions[i].text !== "Select Theme") {
-			colorSelect.style.display = "block"
-		} else if (designOptions[i].selected && designOptions[i].text === "Select Theme"){
-			colorSelect.style.display = "none"
-		};
+    colorSelect.prepend(newColorOption);
+    colorSelect.selectedIndex = 0;
+    for (let i = 0; i < designOptions.length; i++) {
+        if (designOptions[i].selected && designOptions[i].text == "Theme - JS Puns") {
+            for (let i = 0; i < colorOptions.length; i++) {
+                if (colorOptions[i].text.includes('JS Puns shirt only')) {
+                    colorOptions[i].style.display = "block";
+                } else {
+                    colorOptions[i].style.display = "none";
+                }
+            }
+        } else if (designOptions[i].selected && designOptions[i].text == "Theme - I ♥ JS") {
+            for (let i = 0; i < colorOptions.length; i++) {
+                if (colorOptions[i].text.includes('I ♥ JS shirt only')) {
+                    colorOptions[i].style.display = "block";
+                } else {
+                    colorOptions[i].style.display = "none";
+                }
+            }
+        } else if (designOptions[i].selected && designOptions[i].text == "Select Theme") {
+            for (let i = 0; i < colorOptions.length; i++) {
+                    colorOptions[i].style.display = "none";
+            }
+        } 
     }
 })
 
