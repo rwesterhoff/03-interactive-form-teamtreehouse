@@ -48,11 +48,10 @@ const designSelect = document.querySelector('form select#design'),
 
     newColorOption.text = "Select color";
 
-
-
 designSelect.addEventListener("change", event => {
     colorSelect.prepend(newColorOption);
     colorSelect.selectedIndex = 0;
+    
     for (let i = 0; i < designOptions.length; i++) {
         if (designOptions[i].selected && designOptions[i].text == "Theme - JS Puns") {
             for (let i = 0; i < colorOptions.length; i++) {
@@ -85,6 +84,22 @@ Some events are at the same day and time as others. If the user selects a worksh
 When a user unchecks an activity, make sure that competing activities (if there are any) are no longer disabled.
 As a user selects activities, a running total should display below the list of checkboxes. For example, if the user selects "Main Conference", then Total: $200 should appear. If they add 1 workshop, the total should change to Total: $300.
 */
+const activityLabels = document.querySelectorAll('.activities > label');
+
+for (let i = 0; i < activityLabels.length; i++) {
+    let checkBox = activityLabels[i].children[0],
+        dayAndTime = checkBox.dataset.dayAndTime,
+        cost = checkBox.dataset.cost;
+
+    activityLabels[i].addEventListener("change", event => {
+        //get dataset
+        //checked?
+            // compare dataset siblings
+            // style siblings as disabled
+        //else
+            // style all as default
+    })
+}
 
 /*
 Payment Info" section
