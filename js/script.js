@@ -46,12 +46,12 @@ const designSelect = document.querySelector('form select#design'),
     colorOptions = colorSelect.querySelectorAll('option'),
     newColorOption = document.createElement('option');
 
-    newColorOption.text = "Select color";
+newColorOption.text = "Select color";
 
 designSelect.addEventListener("change", event => {
     colorSelect.prepend(newColorOption);
     colorSelect.selectedIndex = 0;
-    
+
     for (let i = 0; i < designOptions.length; i++) {
         if (designOptions[i].selected && designOptions[i].text == "Theme - JS Puns") {
             for (let i = 0; i < colorOptions.length; i++) {
@@ -71,9 +71,9 @@ designSelect.addEventListener("change", event => {
             }
         } else if (designOptions[i].selected && designOptions[i].text == "Select Theme") {
             for (let i = 0; i < colorOptions.length; i++) {
-                    colorOptions[i].style.display = "none";
+                colorOptions[i].style.display = "none";
             }
-        } 
+        }
     }
 })
 
@@ -87,17 +87,39 @@ As a user selects activities, a running total should display below the list of c
 const activityLabels = document.querySelectorAll('.activities > label');
 
 for (let i = 0; i < activityLabels.length; i++) {
-    let checkBox = activityLabels[i].children[0],
+    let checkBox = activityLabels[i].querySelector('input[type="checkbox"]'),
         dayAndTime = checkBox.dataset.dayAndTime,
         cost = checkBox.dataset.cost;
 
     activityLabels[i].addEventListener("change", event => {
-        //get dataset
-        //checked?
-            // compare dataset siblings
-            // style siblings as disabled
-        //else
-            // style all as default
+        let pickedActivity = event.target,
+            pickedDate = pickedActivity.dataset.dayAndTime,
+            allCheckBoxes = pickedActivity.parentNode.parentNode.querySelectorAll('input[type="checkbox"]');
+
+        //get date
+        if (pickedDate) {
+            //get sibling checkboxes
+            for (let i = 0; i < allCheckBoxes.length; i++) {
+                let checkBox = allCheckBoxes[i];
+                //unchecked?
+                if (!checkBox.checked && pickedActivity.checked) {
+                    // compare dataset siblings    
+                    if (checkBox.dataset.dayAndTime == pickedDate) {
+                        // style siblings as disabled
+                        checkBox.parentNode.style.color = 'rgba(0,0,0,0.35)';
+                        checkBox.disabled = true;
+                    }
+                // disabled?
+                } else if (checkBox.disabled && !pickedActivity.checked) {
+                    // compare dataset siblings    
+                    if (checkBox.dataset.dayAndTime == pickedDate) {
+                        // keep or style all as default    
+                        checkBox.parentNode.style.color = 'inherit';
+                        checkBox.disabled = false;
+                    }
+                }
+            }
+        }
     })
 }
 
