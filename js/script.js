@@ -148,9 +148,12 @@ When a user selects the "Bitcoin" payment option, the Bitcoin information should
 NOTE: The user should not be able to select the "Select Payment Method" option from the payment select menu, because the user should not be able to submit the form without a chosen payment option.
 */
 const selectPayment = document.querySelector('select#payment'),
+    paymentMethodOption = selectPayment.querySelector('[value^="select"]'),
     paymentCredit = document.querySelector('#credit-card'),
     paymentPaypal = document.querySelector('#paypal'),
     paymentBitcoin = document.querySelector('#bitcoin');
+
+paymentMethodOption.disabled = true;
 
 selectPayment.addEventListener('change', () => {
     if (selectPayment.selectedIndex == 1) {
