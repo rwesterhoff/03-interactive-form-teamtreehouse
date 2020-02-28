@@ -88,7 +88,13 @@ Some events are at the same day and time as others. If the user selects a worksh
 When a user unchecks an activity, make sure that competing activities (if there are any) are no longer disabled.
 As a user selects activities, a running total should display below the list of checkboxes. For example, if the user selects "Main Conference", then Total: $200 should appear. If they add 1 workshop, the total should change to Total: $300.
 */
-const activityLabels = document.querySelectorAll('.activities > label');
+let amountCosts = 0;
+const activityField = document.querySelector('.activities'),
+    activityLabels = activityField.querySelectorAll('label'),
+    totalCosts = '';
+
+totalCosts.innerHTML = '<p>Total costs:<span> $' + amountCosts + '</span></p>';
+activityField.append(totalCosts);
 
 for (let i = 0; i < activityLabels.length; i++) {
     let checkBox = activityLabels[i].querySelector('input[type="checkbox"]'),
@@ -98,7 +104,10 @@ for (let i = 0; i < activityLabels.length; i++) {
     activityLabels[i].addEventListener("change", event => {
         let pickedActivity = event.target,
             pickedDate = pickedActivity.dataset.dayAndTime,
-            allCheckBoxes = pickedActivity.parentNode.parentNode.querySelectorAll('input[type="checkbox"]');
+            pickedCost = pickedActivity.dataset.cost,
+            allCheckBoxes = activityField.querySelectorAll('input[type="checkbox"]');
+
+        console.log(amountCosts);
 
         //get sibling checkboxes
         for (let i = 0; i < allCheckBoxes.length; i++) {
@@ -117,6 +126,9 @@ for (let i = 0; i < activityLabels.length; i++) {
                     checkBox.parentNode.style.color = 'inherit';
                     checkBox.disabled = false;
                 }
+            }
+            if (cost && pickedActivity.checked) {
+                amountCosts += parseInt(pickedCost);
             }
         }
     })
