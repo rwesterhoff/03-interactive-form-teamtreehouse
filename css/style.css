@@ -107,7 +107,8 @@ input[type="radio"] {
 	display: inline-block;
 }
 
-button {
+button,
+button[disabled]:hover {
 	color: #fff;
 	padding: .55em 1.25em;
 	background: #083f57;
@@ -120,6 +121,14 @@ button {
 
 button:hover {
 	background: #6F9DDC;
+}
+
+button[disabled] {
+	opacity: 0.25;
+}
+
+button[disabled]:hover {
+	cursor: not-allowed;
 }
 
 input, 
