@@ -53,23 +53,27 @@ designSelect.addEventListener("change", event => {
     colorSelect.selectedIndex = 0;
 
     for (let i = 0; i < designOptions.length; i++) {
-        if (designOptions[i].selected && designOptions[i].text == "Theme - JS Puns") {
+        const defaultOption = "Select",
+            option01 = "JS Puns",
+            option02 = "I ♥ JS";
+
+        if (designOptions[i].selected && designOptions[i].text.includes(option01)) {
             for (let i = 0; i < colorOptions.length; i++) {
-                if (colorOptions[i].text.includes('JS Puns shirt only')) {
+                if (colorOptions[i].text.includes(option01)) {
                     colorOptions[i].style.display = "block";
                 } else {
                     colorOptions[i].style.display = "none";
                 }
             }
-        } else if (designOptions[i].selected && designOptions[i].text == "Theme - I ♥ JS") {
+        } else if (designOptions[i].selected && designOptions[i].text.includes(option02)) {
             for (let i = 0; i < colorOptions.length; i++) {
-                if (colorOptions[i].text.includes('I ♥ JS shirt only')) {
+                if (colorOptions[i].text.includes(option02)) {
                     colorOptions[i].style.display = "block";
                 } else {
                     colorOptions[i].style.display = "none";
                 }
             }
-        } else if (designOptions[i].selected && designOptions[i].text == "Select Theme") {
+        } else if (designOptions[i].selected && designOptions[i].text.includes(defaultOption)) {
             for (let i = 0; i < colorOptions.length; i++) {
                 colorOptions[i].style.display = "none";
             }
@@ -96,27 +100,22 @@ for (let i = 0; i < activityLabels.length; i++) {
             pickedDate = pickedActivity.dataset.dayAndTime,
             allCheckBoxes = pickedActivity.parentNode.parentNode.querySelectorAll('input[type="checkbox"]');
 
-        //get date
-        if (pickedDate) {
-            //get sibling checkboxes
-            for (let i = 0; i < allCheckBoxes.length; i++) {
-                let checkBox = allCheckBoxes[i];
+        //get sibling checkboxes
+        for (let i = 0; i < allCheckBoxes.length; i++) {
+            let checkBox = allCheckBoxes[i];
+
+            //get date and compare dataset siblings    
+            if (pickedDate && checkBox.dataset.dayAndTime == pickedDate) {
                 //unchecked?
                 if (!checkBox.checked && pickedActivity.checked) {
-                    // compare dataset siblings    
-                    if (checkBox.dataset.dayAndTime == pickedDate) {
-                        // style siblings as disabled
-                        checkBox.parentNode.style.color = 'rgba(0,0,0,0.35)';
-                        checkBox.disabled = true;
-                    }
-                // disabled?
+                    // style siblings as disabled
+                    checkBox.parentNode.style.color = 'rgba(0,0,0,0.35)';
+                    checkBox.disabled = true;
+                    // disabled?
                 } else if (checkBox.disabled && !pickedActivity.checked) {
-                    // compare dataset siblings    
-                    if (checkBox.dataset.dayAndTime == pickedDate) {
-                        // keep or style all as default    
-                        checkBox.parentNode.style.color = 'inherit';
-                        checkBox.disabled = false;
-                    }
+                    // keep or style all as default    
+                    checkBox.parentNode.style.color = 'inherit';
+                    checkBox.disabled = false;
                 }
             }
         }
