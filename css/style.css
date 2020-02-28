@@ -57,7 +57,8 @@ fieldset {
 }
 
 legend,
-button {
+button,
+.total-costs {
 	font-size: 1.25em;	
 }
 
@@ -125,6 +126,13 @@ input,
 select, 
 option {
 	font-family: 'roboto', sans-serif;
+}
+
+.total-costs {
+	color: black;
+}
+.total-costs::before {
+	content: '\0020';
 }
 
 /* ================================= 
