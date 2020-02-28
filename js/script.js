@@ -95,7 +95,7 @@ const activityField = document.querySelector('.activities'),
     activityLabels = activityField.querySelectorAll('label');
 
 // add total
-totalCosts.innerHTML = 'Total costs:<span class="total-costs">'+ currency + amountCosts + '</span>';
+totalCosts.innerHTML = 'Total costs:<span class="total-costs">' + currency + amountCosts + '</span>';
 activityField.append(totalCosts);
 
 for (let i = 0; i < activityLabels.length; i++) {
@@ -136,7 +136,6 @@ for (let i = 0; i < activityLabels.length; i++) {
         }
 
         document.querySelector('.total-costs').innerText = currency + amountCosts;
-        // console.log(amountCosts);
     })
 }
 
@@ -148,6 +147,31 @@ When a user selects the "PayPal" payment option, the PayPal information should d
 When a user selects the "Bitcoin" payment option, the Bitcoin information should display, and the credit card and “PayPal” information should be hidden.
 NOTE: The user should not be able to select the "Select Payment Method" option from the payment select menu, because the user should not be able to submit the form without a chosen payment option.
 */
+const selectPayment = document.querySelector('select#payment'),
+    paymentCredit = document.querySelector('#credit-card'),
+    paymentPaypal = document.querySelector('#paypal'),
+    paymentBitcoin = document.querySelector('#bitcoin');
+
+selectPayment.addEventListener('change', () => {
+    if (selectPayment.selectedIndex == 1) {
+        paymentCredit.style.display = 'inherit';
+        paymentPaypal.style.display = 'none';
+        paymentBitcoin.style.display = 'none';
+    } else if (selectPayment.selectedIndex == 2) {
+        paymentCredit.style.display = 'none';
+        paymentPaypal.style.display = 'inherit';
+        paymentBitcoin.style.display = 'none';
+    } else if (selectPayment.selectedIndex == 3) {
+        paymentCredit.style.display = 'none';
+        paymentPaypal.style.display = 'none';
+        paymentBitcoin.style.display = 'inherit';
+    } else {
+        paymentCredit.style.display = 'none';
+        paymentPaypal.style.display = 'none';
+        paymentBitcoin.style.display = 'none';
+    }
+});
+selectPayment.selectedIndex = 1;
 
 /*
 Form validation
