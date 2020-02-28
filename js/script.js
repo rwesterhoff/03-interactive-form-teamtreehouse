@@ -156,22 +156,16 @@ const selectPayment = document.querySelector('select#payment'),
 paymentMethodOption.disabled = true;
 
 selectPayment.addEventListener('change', () => {
+    paymentCredit.style.display = 'none';
+    paymentPaypal.style.display = 'none';
+    paymentBitcoin.style.display = 'none';
+    
     if (selectPayment.selectedIndex == 1) {
         paymentCredit.style.display = 'inherit';
-        paymentPaypal.style.display = 'none';
-        paymentBitcoin.style.display = 'none';
     } else if (selectPayment.selectedIndex == 2) {
-        paymentCredit.style.display = 'none';
         paymentPaypal.style.display = 'inherit';
-        paymentBitcoin.style.display = 'none';
     } else if (selectPayment.selectedIndex == 3) {
-        paymentCredit.style.display = 'none';
-        paymentPaypal.style.display = 'none';
         paymentBitcoin.style.display = 'inherit';
-    } else {
-        paymentCredit.style.display = 'none';
-        paymentPaypal.style.display = 'none';
-        paymentBitcoin.style.display = 'none';
     }
 });
 selectPayment.selectedIndex = 1;
