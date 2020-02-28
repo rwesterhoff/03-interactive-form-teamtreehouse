@@ -88,12 +88,14 @@ Some events are at the same day and time as others. If the user selects a worksh
 When a user unchecks an activity, make sure that competing activities (if there are any) are no longer disabled.
 As a user selects activities, a running total should display below the list of checkboxes. For example, if the user selects "Main Conference", then Total: $200 should appear. If they add 1 workshop, the total should change to Total: $300.
 */
-let amountCosts = 0;
+let amountCosts = 0,
+    currency = '$',
+    totalCosts = document.createElement('p');
 const activityField = document.querySelector('.activities'),
-    activityLabels = activityField.querySelectorAll('label'),
-    totalCosts = '';
+    activityLabels = activityField.querySelectorAll('label');
 
-totalCosts.innerHTML = '<p>Total costs:<span> $' + amountCosts + '</span></p>';
+// add total
+totalCosts.innerHTML = 'Total costs:<span class="total-costs">'+ currency + amountCosts + '</span>';
 activityField.append(totalCosts);
 
 for (let i = 0; i < activityLabels.length; i++) {
@@ -106,8 +108,6 @@ for (let i = 0; i < activityLabels.length; i++) {
             pickedDate = pickedActivity.dataset.dayAndTime,
             pickedCost = pickedActivity.dataset.cost,
             allCheckBoxes = activityField.querySelectorAll('input[type="checkbox"]');
-
-        console.log(amountCosts);
 
         //get sibling checkboxes
         for (let i = 0; i < allCheckBoxes.length; i++) {
@@ -127,10 +127,16 @@ for (let i = 0; i < activityLabels.length; i++) {
                     checkBox.disabled = false;
                 }
             }
-            if (cost && pickedActivity.checked) {
-                amountCosts += parseInt(pickedCost);
-            }
         }
+
+        if (cost && pickedActivity.checked) {
+            amountCosts += parseInt(pickedCost);
+        } else if (cost && !pickedActivity.checked) {
+            amountCosts -= parseInt(pickedCost);
+        }
+
+        document.querySelector('.total-costs').innerText = currency + amountCosts;
+        // console.log(amountCosts);
     })
 }
 
