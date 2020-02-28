@@ -92,7 +92,8 @@ let amountCosts = 0,
     currency = '$',
     totalCosts = document.createElement('p');
 const activityField = document.querySelector('.activities'),
-    activityLabels = activityField.querySelectorAll('label');
+    activityLabels = activityField.querySelectorAll('label'),
+    allCheckBoxes = activityField.querySelectorAll('input[type="checkbox"]');
 
 // add total
 totalCosts.innerHTML = 'Total costs:<span class="total-costs">' + currency + amountCosts + '</span>';
@@ -106,8 +107,7 @@ for (let i = 0; i < activityLabels.length; i++) {
     activityLabels[i].addEventListener("change", event => {
         let pickedActivity = event.target,
             pickedDate = pickedActivity.dataset.dayAndTime,
-            pickedCost = pickedActivity.dataset.cost,
-            allCheckBoxes = activityField.querySelectorAll('input[type="checkbox"]');
+            pickedCost = pickedActivity.dataset.cost;
 
         //get sibling checkboxes
         for (let i = 0; i < allCheckBoxes.length; i++) {
@@ -159,7 +159,7 @@ selectPayment.addEventListener('change', () => {
     paymentCredit.style.display = 'none';
     paymentPaypal.style.display = 'none';
     paymentBitcoin.style.display = 'none';
-    
+
     if (selectPayment.selectedIndex == 1) {
         paymentCredit.style.display = 'inherit';
     } else if (selectPayment.selectedIndex == 2) {
@@ -168,6 +168,7 @@ selectPayment.addEventListener('change', () => {
         paymentBitcoin.style.display = 'inherit';
     }
 });
+
 selectPayment.selectedIndex = 1;
 
 /*
@@ -187,8 +188,28 @@ NOTE: Avoid using snippets or plugins for this project. To get the most out of t
 
 NOTE: Make sure your validation is only validating Credit Card info if Credit Card is the selected payment method.
 */
+const nameField = document.querySelector('input#name'),
+    emailField = document.querySelector('input#mail'),
+    submitButton = document.querySelector('button[type="submit"');
+
+submitButton.disabled = true;
+
+nameField.addEventListener('blur', () => {
+    const regex = /\D+\s?\w*/i;
+
+    console.log(regex.test(nameField.value));
+});
+
+emailField.addEventListener('blur', () => {
+    const regex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i;
+
+    console.log(regex.test(emailField.value));
+});
+
 
 /*
+
+
 Form validation messages
 Provide some kind of indication when there’s a validation error. The field’s borders could turn red, for example, or even better for the user would be if a red text message appeared near the field.
 The following fields should have some obvious form of an error indication:
