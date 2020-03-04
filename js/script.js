@@ -46,12 +46,12 @@ const designSelect = document.querySelector('form select#design'),
     newOption = document.createElement('option');
 
 function resetColorSelect() {
+    colorSelect[0].text = "Select color";
     colorSelect.selectedIndex = 0;
     if (designSelect.selectedIndex == 0) {
         colorSelect.style.display = "none";
     } else {
         colorSelect.style.display = "inherit";
-        colorSelect[0].text = "Select color";
     }
 }
 
@@ -61,16 +61,12 @@ function filterColorOptions(text, removeText, removeChars) {
         string = text.replace(regexTxt, ''),
         result = string.replace(regexChars, '');
 
-    designOptions.forEach(option => {
-        if (option.selected && option.text.includes(result)) {
-            colorOptions.forEach(option => {
-                if (option.text.includes(result)) {
-                    option.style.display = "block"
-                } else {
-                    option.style.display = "none"
-                };
-            })
-        }
+    colorOptions.forEach(option => {
+        if (option.text.includes(result)) {
+            option.style.display = "block"
+        } else {
+            option.style.display = "none"
+        };
     })
 }
 
@@ -80,8 +76,8 @@ resetColorSelect();
 
 designSelect.addEventListener("change", event => {
     let i = event.target.selectedIndex;
-    resetColorSelect();
 
+    resetColorSelect();
     filterColorOptions(designOptions[i].text, 'Theme', ' - ');
 })
 
@@ -207,16 +203,16 @@ function validateEmail() {
     return regex.test(emailField.value);
 }
 
-function validateActivities() {
-    return allCheckBoxes.forEach(checkBox => console.log(checkBox.checked));
-}
-
 // Validate namefield
 nameField.addEventListener('blur', validateName);
 
 // Validate emailfield
 emailField.addEventListener('blur', validateEmail);
 
+// Validate activities
+function validateActivities() {
+    return allCheckBoxes.forEach(checkBox => console.log(checkBox.checked));
+}
 
 submitButton.addEventListener('click', event => {
     event.preventDefault();
