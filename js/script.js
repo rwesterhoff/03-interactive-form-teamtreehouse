@@ -7,7 +7,6 @@ When the page first loads, the first text field should be in focus by default.
 const firstTextField = document.querySelector('form input');
 
 firstTextField.focus();
-
 /*
 ”Job Role” section
 Include a text field that will be revealed when the "Other" option is selected from the "Job Role" drop down menu.
@@ -21,13 +20,13 @@ const jobRoleSelect = document.querySelector('form select#title'),
 jobRoleTextField.style.display = "none";
 
 jobRoleSelect.addEventListener("change", event => {
-    for (let i = 0; i < jobRoleOptions.length; i++) {
-        if (jobRoleOptions[i].selected && jobRoleOptions[i].text === "Other") {
+    jobRoleOptions.forEach(option => {
+        if (option.selected && option.text === "Other") {
             jobRoleTextField.style.display = "block";
         } else {
             jobRoleTextField.style.display = "none";
         }
-    }
+    })
 })
 
 
@@ -44,42 +43,36 @@ const designSelect = document.querySelector('form select#design'),
     designOptions = designSelect.querySelectorAll('option'),
     colorSelect = document.querySelector('form select#color'),
     colorOptions = colorSelect.querySelectorAll('option'),
-    newColorOption = document.createElement('option');
+    newOption = document.createElement('option');
 
 function resetColorSelect() {
     colorSelect.selectedIndex = 0;
     if (designSelect.selectedIndex == 0) {
-        for (let i = 0; i < colorOptions.length; i++) {
-            colorOptions[i].style.display = "none"
-        }
-        colorSelect[0].text = "Please select a T-shirt theme";
+        colorSelect.style.display = "none";
     } else {
+        colorSelect.style.display = "inherit";
         colorSelect[0].text = "Select color";
     }
 }
 
-function filterColorOptions(text, ignTxt, ignChars) {
-    const regexTxt = new RegExp(ignTxt),
-        regexChars = new RegExp(ignChars),
+function filterColorOptions(text, removeText, removeChars) {
+    const regexTxt = new RegExp(removeText),
+        regexChars = new RegExp(removeChars),
         string = text.replace(regexTxt, ''),
         result = string.replace(regexChars, '');
 
-    for (let i = 0; i < designOptions.length; i++) {
-        if (designOptions[i].selected && designOptions[i].text.includes(result)) {
-            for (let i = 0; i < colorOptions.length; i++) {
-                if (colorOptions[i].text.includes(result)) {
-                    colorOptions[i].style.display = "block";
-                } else {
-                    colorOptions[i].style.display = "none";
-                }
-            }
+    designOptions.forEach(option => {
+        if (option.selected && option.text.includes(result)) {
+            colorOptions.forEach(option => {
+                option.text.includes(result) ? option.style.display = "block" : option.style.display = "none";
+            })
         }
-    }
+    })
 }
 
-colorSelect.prepend(newColorOption);
-resetColorSelect();
 
+colorSelect.prepend(newOption);
+resetColorSelect();
 
 designSelect.addEventListener("change", event => {
     let i = event.target.selectedIndex;
@@ -99,27 +92,24 @@ let amountCosts = 0,
     currency = '$',
     totalCosts = document.createElement('p');
 const activityField = document.querySelector('.activities'),
-    activityLabels = activityField.querySelectorAll('label'),
     allCheckBoxes = activityField.querySelectorAll('input[type="checkbox"]');
 
-// add total
+// add total in HTML
 totalCosts.innerHTML = 'Total costs:<span class="total-costs">' + currency + amountCosts + '</span>';
 activityField.append(totalCosts);
 
-for (let i = 0; i < activityLabels.length; i++) {
-    let checkBox = activityLabels[i].querySelector('input[type="checkbox"]'),
-        dayAndTime = checkBox.dataset.dayAndTime,
+
+allCheckBoxes.forEach(checkBox => {
+    let dayAndTime = checkBox.dataset.dayAndTime,
         cost = checkBox.dataset.cost;
 
-    activityLabels[i].addEventListener("change", event => {
+    checkBox.addEventListener("change", event => {
         let pickedActivity = event.target,
             pickedDate = pickedActivity.dataset.dayAndTime,
             pickedCost = pickedActivity.dataset.cost;
 
-        //get sibling checkboxes
-        for (let i = 0; i < allCheckBoxes.length; i++) {
-            let checkBox = allCheckBoxes[i];
-
+        //check each checkbox
+        allCheckBoxes.forEach(checkBox => {
             //get date and compare dataset siblings    
             if (pickedDate && checkBox.dataset.dayAndTime == pickedDate) {
                 //unchecked?
@@ -134,7 +124,7 @@ for (let i = 0; i < activityLabels.length; i++) {
                     checkBox.disabled = false;
                 }
             }
-        }
+        });
 
         if (cost && pickedActivity.checked) {
             amountCosts += parseInt(pickedCost);
@@ -144,7 +134,7 @@ for (let i = 0; i < activityLabels.length; i++) {
 
         document.querySelector('.total-costs').innerText = currency + amountCosts;
     })
-}
+});
 
 /*
 Payment Info" section
@@ -199,18 +189,38 @@ const nameField = document.querySelector('input#name'),
     emailField = document.querySelector('input#mail'),
     submitButton = document.querySelector('button[type="submit"');
 
-submitButton.disabled = true;
-
-nameField.addEventListener('blur', () => {
+function validateName() {
     const regex = /\D+\s?\w*/i;
 
     console.log(regex.test(nameField.value));
-});
+    return regex.test(nameField.value);
+}
 
-emailField.addEventListener('blur', () => {
+function validateEmail() {
     const regex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i;
 
     console.log(regex.test(emailField.value));
+    return regex.test(emailField.value);
+}
+
+function validateActivities() {
+    return allCheckBoxes.forEach(checkBox => console.log(checkBox.checked));
+}
+
+// Validate namefield
+nameField.addEventListener('blur', validateName);
+
+// Validate emailfield
+emailField.addEventListener('blur', validateEmail);
+
+
+submitButton.addEventListener('click', event => {
+    event.preventDefault();
+    if (validateActivities()) {
+        alert('valid');
+    } else {
+        alert('invalid')
+    };
 });
 
 
