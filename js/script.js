@@ -46,39 +46,46 @@ const designSelect = document.querySelector('form select#design'),
     colorOptions = colorSelect.querySelectorAll('option'),
     newColorOption = document.createElement('option');
 
-newColorOption.text = "Select color";
-
-designSelect.addEventListener("change", event => {
-    colorSelect.prepend(newColorOption);
+function resetColorSelect() {
     colorSelect.selectedIndex = 0;
+    if (designSelect.selectedIndex == 0) {
+        for (let i = 0; i < colorOptions.length; i++) {
+            colorOptions[i].style.display = "none"
+        }
+        colorSelect[0].text = "Please select a T-shirt theme";
+    } else {
+        colorSelect[0].text = "Select color";
+    }
+}
+
+function filterColorOptions(text, ignTxt, ignChars) {
+    const regexTxt = new RegExp(ignTxt),
+        regexChars = new RegExp(ignChars),
+        string = text.replace(regexTxt, ''),
+        result = string.replace(regexChars, '');
 
     for (let i = 0; i < designOptions.length; i++) {
-        const defaultOption = "Select",
-            option01 = "JS Puns",
-            option02 = "I ♥ JS";
-
-        if (designOptions[i].selected && designOptions[i].text.includes(option01)) {
+        if (designOptions[i].selected && designOptions[i].text.includes(result)) {
             for (let i = 0; i < colorOptions.length; i++) {
-                if (colorOptions[i].text.includes(option01)) {
+                if (colorOptions[i].text.includes(result)) {
                     colorOptions[i].style.display = "block";
                 } else {
                     colorOptions[i].style.display = "none";
                 }
-            }
-        } else if (designOptions[i].selected && designOptions[i].text.includes(option02)) {
-            for (let i = 0; i < colorOptions.length; i++) {
-                if (colorOptions[i].text.includes(option02)) {
-                    colorOptions[i].style.display = "block";
-                } else {
-                    colorOptions[i].style.display = "none";
-                }
-            }
-        } else if (designOptions[i].selected && designOptions[i].text.includes(defaultOption)) {
-            for (let i = 0; i < colorOptions.length; i++) {
-                colorOptions[i].style.display = "none";
             }
         }
     }
+}
+
+colorSelect.prepend(newColorOption);
+resetColorSelect();
+
+
+designSelect.addEventListener("change", event => {
+    let i = event.target.selectedIndex;
+    resetColorSelect();
+
+    filterColorOptions(designOptions[i].text, 'Theme', ' - ');
 })
 
 /*
