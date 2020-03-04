@@ -64,7 +64,11 @@ function filterColorOptions(text, removeText, removeChars) {
     designOptions.forEach(option => {
         if (option.selected && option.text.includes(result)) {
             colorOptions.forEach(option => {
-                option.text.includes(result) ? option.style.display = "block" : option.style.display = "none";
+                if (option.text.includes(result)) {
+                    option.style.display = "block"
+                } else {
+                    option.style.display = "none"
+                };
             })
         }
     })
