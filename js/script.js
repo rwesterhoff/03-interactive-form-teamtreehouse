@@ -187,20 +187,44 @@ NOTE: Make sure your validation is only validating Credit Card info if Credit Ca
 */
 const nameField = document.querySelector('input#name'),
     emailField = document.querySelector('input#mail'),
-    submitButton = document.querySelector('button[type="submit"');
+    submitButton = document.querySelector('button[type="submit"'),
+    creditCardNumber = document.querySelector('input#cc-num'),
+    zipCode = document.querySelector('input#zip'),
+    cvv = document.querySelector('input#cvv');
 
 function validateName() {
-    const regex = /\D+\s?\w*/i;
+    const regex = /^\D+\s?\w*$/i;
 
-    console.log(regex.test(nameField.value));
     return regex.test(nameField.value);
 }
 
 function validateEmail() {
     const regex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i;
 
-    console.log(regex.test(emailField.value));
     return regex.test(emailField.value);
+}
+
+// Validate activities
+function validateActivities() {
+    allCheckBoxes.forEach(checkBox => checkBox.checked);
+}
+
+function validateCreditCardName() {
+    const regex = /^\d{13,16}$/i;
+
+    return regex.test(creditCardNumber.value);
+}
+
+function validateZip() {
+    const regex = /^\d{5}$/i;
+
+    return regex.test(zipCode.value);
+}
+
+function validateCvv() {
+    const regex = /^\d{3}$/i;
+
+    return regex.test(cvv.value);
 }
 
 // Validate namefield
@@ -209,19 +233,26 @@ nameField.addEventListener('blur', validateName);
 // Validate emailfield
 emailField.addEventListener('blur', validateEmail);
 
-// Validate activities
-function validateActivities() {
-    return allCheckBoxes.forEach(checkBox => console.log(checkBox.checked));
-}
+
+// Validate credit card number
+creditCardNumber.addEventListener('blur', validateCreditCardName);
+
+// Validate zip code
+zipCode.addEventListener('blur', validateZip);
+
+// Validate zip code
+cvv.addEventListener('blur', validateZip);
 
 submitButton.addEventListener('click', event => {
     event.preventDefault();
     if (validateActivities()) {
-        alert('valid');
+        return alert('valid');
     } else {
         alert('invalid')
     };
 });
+
+
 
 
 /*
