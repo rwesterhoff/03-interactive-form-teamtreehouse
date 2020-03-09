@@ -232,24 +232,39 @@ function validateCvv() {
 }
 
 // Validate namefield
-nameField.addEventListener('blur', validateName);
+nameField.addEventListener('blur', ()=>{
+  toggleError(validateName(), nameField);
+});
 
 // Validate emailfield
-emailField.addEventListener('blur', validateEmail);
+emailField.addEventListener('blur', () => {
+  toggleError(validateEmail(), emailField);
+});
 
 
 // Validate credit card number
-creditCardNumber.addEventListener('blur', validateCreditCardName);
+creditCardNumber.addEventListener('blur', () => {
+  toggleError(validateCreditCardName(), creditCardNumber);
+});
 
 // Validate zip code
-zipCode.addEventListener('blur', validateZip);
+zipCode.addEventListener('blur',  () => {
+  toggleError(validateZip(), zipCode);
+});
 
 // Validate zip code
-cvv.addEventListener('blur', validateZip);
+cvv.addEventListener('blur', () => {
+  toggleError(validateCvv(), cvv);
+});
 
 submitButton.addEventListener('click', event => {
     event.preventDefault();
-    validateActivities() ? alert('valid') : alert('invalid');
+  toggleError(validateName(), nameField);
+  toggleError(validateEmail(), emailField);
+  toggleError(validateActivities(), activityField);
+  toggleError(validateCreditCardName(), creditCardNumber);
+  toggleError(validateZip(), zipCode);
+  toggleError(validateCvv(), cvv);
 });
 
 
@@ -273,7 +288,9 @@ Note: Avoid use alerts for your validation messages.
 
 Note: If a user tries to submit an empty form, there should be an error indication or message displayed for the name field, the email field, the activity section, and the credit card fields if credit card is the selected payment method.
 */
-
+function toggleError(validation, element) {
+  validation ? element.classList.remove('error') : element.classList.add('error');
+}
 /*
 Form works without JavaScript - Progressive Enhancement
 The user should still have access to all form fields and payment information if JS isn't working for whatever reason. For example, when the JS is removed from the project:
