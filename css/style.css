@@ -238,8 +238,7 @@ option {
 
 input.error,
 input.error:focus {
-	outline: red 2px solid;
-	border-color: transparent;
+	border-color: red;
 	background-color: white;
 }
 .error,
