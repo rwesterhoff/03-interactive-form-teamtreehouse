@@ -206,7 +206,11 @@ function validateEmail() {
 
 // Validate activities
 function validateActivities() {
-    allCheckBoxes.forEach(checkBox => checkBox.checked);
+    for (let i = 0; i < allCheckBoxes.length; i++) {
+        if (allCheckBoxes[i].checked) {
+            return true;
+        }
+    }
 }
 
 function validateCreditCardName() {
@@ -245,11 +249,7 @@ cvv.addEventListener('blur', validateZip);
 
 submitButton.addEventListener('click', event => {
     event.preventDefault();
-    if (validateActivities()) {
-        return alert('valid');
-    } else {
-        alert('invalid')
-    };
+    validateActivities() ? alert('valid') : alert('invalid');
 });
 
 
