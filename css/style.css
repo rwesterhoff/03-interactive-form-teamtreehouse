@@ -248,6 +248,7 @@ input.error:focus {
 }
 
 .error,
+.error:focus,
 .activities.error {
 	background: url(../assets/times-circle.svg);
 	background-size: 24px;
