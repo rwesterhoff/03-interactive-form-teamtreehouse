@@ -32,6 +32,7 @@ jobRoleSelect.addEventListener("change", event => {
 const designSelect = document.querySelector('form select#design'),
     designOptions = designSelect.querySelectorAll('option'),
     colorSelect = document.querySelector('form select#color'),
+    colorSection = colorSelect.parentNode,
     colorOptions = colorSelect.querySelectorAll('option'),
     newOption = document.createElement('option');
 
@@ -39,9 +40,9 @@ function resetColorSelect() {
     colorSelect[0].text = "Select color";
     colorSelect.selectedIndex = 0;
     if (designSelect.selectedIndex == 0) {
-        colorSelect.style.display = "none";
+        colorSection.style.display = "none";
     } else {
-        colorSelect.style.display = "inherit";
+        colorSection.style.display = "inherit";
     }
 }
 
@@ -135,6 +136,9 @@ const selectPayment = document.querySelector('select#payment'),
 
 paymentMethodOption.disabled = true;
 
+paymentPaypal.style.display = 'none';
+paymentBitcoin.style.display = 'none';
+
 selectPayment.addEventListener('change', () => {
     paymentCredit.style.display = 'none';
     paymentPaypal.style.display = 'none';
@@ -150,7 +154,7 @@ selectPayment.addEventListener('change', () => {
 });
 
 selectPayment.selectedIndex = 1;
-
+console.log(selectPayment.selectedIndex);
 /*****************************************
 Form validation
 *****************************************/
@@ -200,8 +204,42 @@ function validateCvv() {
     return regex.test(cvv.value);
 }
 
-function toggleError(validation, element) {
+function toggleError(validation, element, message) {
     validation ? element.classList.remove('error') : element.classList.add('error');
+    errorMessage(validation, element, message);
+}
+
+function errorMessage(validation, element, message) {
+    const p = document.createElement('p'),
+        sibling = element.nextElementSibling,
+        errorClass = 'error-message',
+        createMessage = (message) => {
+            if (element.value === '') {
+                p.innerText = 'This field cannot be empty.';
+            } else {
+                p.innerText = message;
+            }
+        };
+
+    p.classList.add(errorClass);
+
+    if (sibling) {
+        if (!validation && !sibling.classList.contains(errorClass)) {
+            element.parentNode.insertBefore(p, sibling);
+            createMessage(message);
+        } else if (validation && sibling.classList.contains(errorClass)) {
+            // remove message
+            element.parentNode.removeChild(sibling);
+        }
+    } else {
+        if (!validation) {
+            element.parentNode.appendChild(p);
+            createMessage(message);
+        } else if (validation) {
+            // remove message
+            element.parentNode.removeChild(sibling);
+        }
+    }
 }
 
 // Validate namefield
@@ -210,31 +248,34 @@ nameField.addEventListener('blur', () => {
 });
 
 // Validate emailfield
-emailField.addEventListener('blur', () => {
-    toggleError(validateEmail(), emailField);
+emailField.addEventListener('input', () => {
+    toggleError(validateEmail(), emailField, 'Please provide a valid email address.');
 });
-
+emailField.addEventListener('blur', () => {
+    toggleError(validateEmail(), emailField, 'Please provide a valid email address.');
+});
+    
 
 // Validate credit card number
 creditCardNumber.addEventListener('blur', () => {
-    toggleError(validateCreditCardName(), creditCardNumber);
+    toggleError(validateCreditCardName(), creditCardNumber, 'Please provide a number between 13 and 16 characters.');
 });
 
 // Validate zip code
 zipCode.addEventListener('blur', () => {
-    toggleError(validateZip(), zipCode);
+    toggleError(validateZip(), zipCode, 'Please provide 5 numbers.');
 });
 
 // Validate zip code
 cvv.addEventListener('blur', () => {
-    toggleError(validateCvv(), cvv);
+    toggleError(validateCvv(), cvv, 'Please provide 3 numbers.');
 });
 
 submitButton.addEventListener('click', event => {
     event.preventDefault();
     toggleError(validateName(), nameField);
     toggleError(validateEmail(), emailField);
-    toggleError(validateActivities(), activityField);
+    toggleError(validateActivities(), activityField, 'Select at least 1 activity.');
     toggleError(validateCreditCardName(), creditCardNumber);
     toggleError(validateZip(), zipCode);
     toggleError(validateCvv(), cvv);
@@ -248,16 +289,6 @@ Add good code comments
 /*****************************************
 EXCEEDS PART
 ******************************************/
-
-/*
-T Shirt Section
-Hide the "Color" label and select menu until a T-Shirt design is selected from the "Design" menu.
-*/
-
-/*
-Conditional Error Message
-Program at least one of your error messages so that more information is provided depending on the error. For example, if the user hasn’t entered a credit card number and the field is completely blank, the error message reads “Please enter a credit card number.” If the field isn’t empty but contains only 10 numbers, the error message reads “Please enter a number that is between 13 and 16 digits long.”
-*/
 
 /*Real-time Error Messages
 Program your form so that it provides a real-time validation error message for at least one text input field. Rather than providing an error message on submit, your form should check for errors and display messages as the user begins typing inside a text field. For example, if the user enters an invalid email address, the error appears as the user begins to type, and disappears as soon as the user has entered a complete and correctly formatted email address. You must accomplish this with your own JavaScript code. Do not rely on HTML5's built-in email validation.

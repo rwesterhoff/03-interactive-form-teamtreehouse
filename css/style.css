@@ -240,10 +240,12 @@ input.error,
 input.error:focus {
 	border-color: red;
 	background-color: white;
+	margin-bottom: 9px;
 }
 .error,
 .error:focus,	
-.error * {
+.error *,
+.error-message {
 	color: red;
 }
 
@@ -254,7 +256,10 @@ input.error:focus {
 	background-size: 24px;
 	background-repeat: no-repeat;
 	background-position: right 10px center;
-
 }
 
+.error-message {
+	margin-top: 0px;
+	margin-bottom: 18px;
+}
 
