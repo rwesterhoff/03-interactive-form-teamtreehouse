@@ -263,6 +263,9 @@ function toggleError(validation, element, message) {
 }
 
 // Add validation to name field.
+nameField.addEventListener('input', () => {
+    validateName();
+});
 nameField.addEventListener('blur', () => {
     validateName();
 });
@@ -276,16 +279,25 @@ emailField.addEventListener('blur', () => {
 });
 
 // Add validation to credit card number field.
+creditCardNumber.addEventListener('input', () => {
+    validateCreditCardName();
+});
 creditCardNumber.addEventListener('blur', () => {
     validateCreditCardName();
 });
 
 // Add validation to zip code field.
+zipCode.addEventListener('input', () => {
+    validateZip();
+});
 zipCode.addEventListener('blur', () => {
     validateZip();
 });
 
 // Add validation to zip code field.
+cvv.addEventListener('input', () => {
+    validateCvv();
+});
 cvv.addEventListener('blur', () => {
     validateCvv();
 });
