@@ -172,8 +172,7 @@ const nameField = document.querySelector('input#name'),
     creditCardNumber = document.querySelector('input#cc-num'),
     zipCode = document.querySelector('input#zip'),
     cvv = document.querySelector('input#cvv');
-let errorMessage = null,
-    formSubmitted = null;
+let errorMessage = null;
 
 // Speaks for itself.
 function validateRegEx(regex, element) {
@@ -192,7 +191,7 @@ function validateEmail() {
 
 function validateActivities() {
     errorMessage = 'Select at least 1 activity.';
-    let checked = false;
+    let checked = null;
 
     for (let i = 0; i < allCheckBoxes.length; i++) {
         if (allCheckBoxes[i].checked) {
@@ -319,3 +318,4 @@ submitButton.addEventListener('click', event => {
         validateCvv();
     }
 });
+
