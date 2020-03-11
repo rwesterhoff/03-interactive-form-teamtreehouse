@@ -282,12 +282,12 @@ creditCardNumber.addEventListener('blur', () => {
 
 // Add validation to zip code field.
 zipCode.addEventListener('blur', () => {
-    toggleError(validateZip(), zipCode, errorMessage);
+    validateZip();
 });
 
 // Add validation to zip code field.
 cvv.addEventListener('blur', () => {
-    toggleError(validateCvv(), cvv, errorMessage);
+    validateCvv();
 });
 
 // Add validation to submission of form.
