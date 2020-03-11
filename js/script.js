@@ -172,7 +172,8 @@ const nameField = document.querySelector('input#name'),
     creditCardNumber = document.querySelector('input#cc-num'),
     zipCode = document.querySelector('input#zip'),
     cvv = document.querySelector('input#cvv');
-let errorMessage = null;
+let errorMessage = null,
+    formSubmitted = null;
 
 // Speaks for itself.
 function validateRegEx(regex, element) {
@@ -180,7 +181,8 @@ function validateRegEx(regex, element) {
 }
 
 function validateName() {
-    toggleError(validateRegEx(/^\D+\s?\w*$/i, nameField), nameField);
+    errorMessage = 'Please provide a valid name.';
+    toggleError(validateRegEx(/^\D+\s?\w*$/i, nameField), nameField, errorMessage);
 }
 
 function validateEmail() {
@@ -190,7 +192,7 @@ function validateEmail() {
 
 function validateActivities() {
     errorMessage = 'Select at least 1 activity.';
-    let checked = null;
+    let checked = false;
 
     for (let i = 0; i < allCheckBoxes.length; i++) {
         if (allCheckBoxes[i].checked) {
@@ -202,7 +204,7 @@ function validateActivities() {
 }
 
 function validateCreditCardName() {
-    errorMessage = 'Please provide a number between 13 and 16 characters.';
+    errorMessage = 'Please provide range of numbers between 13 and 16 characters.';
     toggleError(validateRegEx(/^\d{13,16}$/i, creditCardNumber), creditCardNumber, errorMessage);
 }
 
@@ -229,29 +231,31 @@ function toggleError(validation, element, message) {
                 element.classList.add(errorClass);
             }
         },
-        createMessage = (message) => {
+        createMessage = (targetElement, message) => {
             if (element.value === '') {
-                p.innerText = 'This field cannot be empty.';
+                targetElement.innerText = 'This field cannot be empty.';
             } else {
-                p.innerText = message;
+                targetElement.innerText = message;
             }
         },
         removeMessage = () => {
-            element.parentNode.removeChild(sibling);
+            if (sibling) element.parentNode.removeChild(sibling);
         },
         controlErrorMessage = () => {
             p.classList.add(errorMessageClass);
             if (sibling) {
                 if (!validation && !sibling.classList.contains(errorMessageClass)) {
                     element.parentNode.insertBefore(p, sibling);
-                    createMessage(message);
+                    createMessage(p, message);
+                } else if (!validation && sibling.classList.contains(errorMessageClass)) {
+                    createMessage(sibling, message);
                 } else if (validation && sibling.classList.contains(errorMessageClass)) {
                     removeMessage();
                 }
             } else {
                 if (!validation) {
                     element.parentNode.appendChild(p);
-                    createMessage(message);
+                    createMessage(p, message);
                 } else if (validation) {
                     removeMessage();
                 }
@@ -308,6 +312,7 @@ submitButton.addEventListener('click', event => {
     validateName();
     validateEmail();
     validateActivities();
+    // Add credit-card validation only when correct payment method is selected.
     if (selectPayment.selectedIndex == 1) {
         validateCreditCardName();
         validateZip();
