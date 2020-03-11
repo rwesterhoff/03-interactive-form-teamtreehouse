@@ -296,7 +296,9 @@ submitButton.addEventListener('click', event => {
     validateName();
     validateEmail();
     validateActivities();
-    validateCreditCardName();
-    validateZip();
-    validateCvv();
+    if (selectPayment.selectedIndex == 1) {
+        validateCreditCardName();
+        validateZip();
+        validateCvv();
+    }
 });

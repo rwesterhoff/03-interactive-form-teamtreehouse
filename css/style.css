@@ -238,7 +238,7 @@ option {
 
 input.error,
 input.error:focus {
-	border-color: red;
+	border-color: #E10000;
 	background-color: white;
 	margin-bottom: 9px;
 }
@@ -246,9 +246,8 @@ input.error:focus {
 .error:focus,	
 .error *,
 .error-message {
-	color: red;
+	color: #E10000;
 }
-
 .error,
 .error:focus,
 .activities.error {
