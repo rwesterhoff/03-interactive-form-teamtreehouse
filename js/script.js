@@ -172,121 +172,131 @@ const nameField = document.querySelector('input#name'),
     creditCardNumber = document.querySelector('input#cc-num'),
     zipCode = document.querySelector('input#zip'),
     cvv = document.querySelector('input#cvv');
+let errorMessage = null;
 
 // Speaks for itself.
-function validateName() {
-    const regex = /^\D+\s?\w*$/i;
+function validateRegEx(regex, element) {
+    return regex.test(element.value);
+}
 
-    return regex.test(nameField.value);
+function validateName() {
+    toggleError(validateRegEx(/^\D+\s?\w*$/i, nameField), nameField);
 }
 
 function validateEmail() {
-    const regex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i;
-
-    return regex.test(emailField.value);
+    errorMessage = 'Please provide a valid email address.';
+    toggleError(validateRegEx(/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i, emailField), emailField, errorMessage);
 }
 
 function validateActivities() {
+    errorMessage = 'Select at least 1 activity.';
+    let checked = null;
+
     for (let i = 0; i < allCheckBoxes.length; i++) {
         if (allCheckBoxes[i].checked) {
-            return true;
+            checked = true;
         }
     }
+
+    toggleError(checked, activityField, errorMessage);
 }
 
 function validateCreditCardName() {
-    const regex = /^\d{13,16}$/i;
-
-    return regex.test(creditCardNumber.value);
+    errorMessage = 'Please provide a number between 13 and 16 characters.';
+    toggleError(validateRegEx(/^\d{13,16}$/i, creditCardNumber), creditCardNumber, errorMessage);
 }
 
 function validateZip() {
-    const regex = /^\d{5}$/i;
-
-    return regex.test(zipCode.value);
+    errorMessage = 'Please provide 5 numbers.';
+    toggleError(validateRegEx(/^\d{5}$/i, zipCode), zipCode, errorMessage);
 }
 
 function validateCvv() {
-    const regex = /^\d{3}$/i;
-
-    return regex.test(cvv.value);
+    errorMessage = 'Please provide 3 numbers.';
+    toggleError(validateRegEx(/^\d{3}$/i, cvv), cvv, errorMessage);
 }
 
-// Add or remove error styling based on validation.
+// Add or remove error based on validation.
 function toggleError(validation, element, message) {
-    validation ? element.classList.remove('error') : element.classList.add('error');
-    errorMessage(validation, element, message);
-}
-
-// Add or remove error message based on validation.
-function errorMessage(validation, element, message) {
-    const p = document.createElement('p'),
+    const errorClass = 'error',
+        p = document.createElement('p'),
         sibling = element.nextElementSibling,
-        errorClass = 'error-message',
+        errorMessageClass = 'error-message',
+        controlErrorStyling = () => {
+            if (validation) {
+                element.classList.remove(errorClass);
+            } else {
+                element.classList.add(errorClass);
+            }
+        },
         createMessage = (message) => {
             if (element.value === '') {
                 p.innerText = 'This field cannot be empty.';
             } else {
                 p.innerText = message;
             }
+        },
+        removeMessage = () => {
+            element.parentNode.removeChild(sibling);
+        },
+        controlErrorMessage = () => {
+            p.classList.add(errorMessageClass);
+            if (sibling) {
+                if (!validation && !sibling.classList.contains(errorMessageClass)) {
+                    element.parentNode.insertBefore(p, sibling);
+                    createMessage(message);
+                } else if (validation && sibling.classList.contains(errorMessageClass)) {
+                    removeMessage();
+                }
+            } else {
+                if (!validation) {
+                    element.parentNode.appendChild(p);
+                    createMessage(message);
+                } else if (validation) {
+                    removeMessage();
+                }
+            }
         };
 
-    p.classList.add(errorClass);
-
-    if (sibling) {
-        if (!validation && !sibling.classList.contains(errorClass)) {
-            element.parentNode.insertBefore(p, sibling);
-            createMessage(message);
-        } else if (validation && sibling.classList.contains(errorClass)) {
-            // remove message
-            element.parentNode.removeChild(sibling);
-        }
-    } else {
-        if (!validation) {
-            element.parentNode.appendChild(p);
-            createMessage(message);
-        } else if (validation) {
-            // remove message
-            element.parentNode.removeChild(sibling);
-        }
-    }
+    controlErrorStyling();
+    controlErrorMessage();
 }
 
 // Add validation to name field.
 nameField.addEventListener('blur', () => {
-    toggleError(validateName(), nameField);
+    validateName();
 });
 
 // Add validation to email field.
 emailField.addEventListener('input', () => {
-    toggleError(validateEmail(), emailField, 'Please provide a valid email address.');
+    validateEmail();
 });
 emailField.addEventListener('blur', () => {
-    toggleError(validateEmail(), emailField, 'Please provide a valid email address.');
+    validateEmail();
 });
-    
+
 // Add validation to credit card number field.
 creditCardNumber.addEventListener('blur', () => {
-    toggleError(validateCreditCardName(), creditCardNumber, 'Please provide a number between 13 and 16 characters.');
+    validateCreditCardName();
 });
 
 // Add validation to zip code field.
 zipCode.addEventListener('blur', () => {
-    toggleError(validateZip(), zipCode, 'Please provide 5 numbers.');
+    toggleError(validateZip(), zipCode, errorMessage);
 });
 
 // Add validation to zip code field.
 cvv.addEventListener('blur', () => {
-    toggleError(validateCvv(), cvv, 'Please provide 3 numbers.');
+    toggleError(validateCvv(), cvv, errorMessage);
 });
 
 // Add validation to submission of form.
 submitButton.addEventListener('click', event => {
     event.preventDefault();
-    toggleError(validateName(), nameField);
-    toggleError(validateEmail(), emailField);
-    toggleError(validateActivities(), activityField, 'Select at least 1 activity.');
-    toggleError(validateCreditCardName(), creditCardNumber);
-    toggleError(validateZip(), zipCode);
-    toggleError(validateCvv(), cvv);
+    validateName();
+    validateEmail();
+    validateActivities();
+    validateCreditCardName();
+    validateZip();
+    validateCvv();
 });
