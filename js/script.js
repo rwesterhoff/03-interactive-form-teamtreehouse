@@ -1,5 +1,3 @@
-// https://teamtreehouse.com/projects/interactive-form
-
 /*****************************************
 Set focus on the first text field
 *****************************************/
@@ -11,20 +9,17 @@ firstTextField.focus();
 ”Job Role” section
 *****************************************/
 const jobRoleSelect = document.querySelector('form select#title'),
-    jobRoleOptions = jobRoleSelect.querySelectorAll('option'),
     jobRoleTextField = document.querySelector('#other-field');
 
 jobRoleTextField.style.display = "none";
 
 // Show or hide job role field.
 jobRoleSelect.addEventListener("change", event => {
-    jobRoleOptions.forEach(option => {
-        if (option.selected && option.text === "Other") {
-            jobRoleTextField.style.display = "block";
-        } else {
-            jobRoleTextField.style.display = "none";
-        }
-    })
+    if (jobRoleSelect.value === "other") {
+        jobRoleTextField.style.display = "block"
+    } else {
+        jobRoleTextField.style.display = "none";
+    }
 })
 
 /*****************************************
@@ -96,8 +91,7 @@ activityField.append(totalCosts);
 
 
 allCheckBoxes.forEach(checkBox => {
-    let dayAndTime = checkBox.dataset.dayAndTime,
-        cost = checkBox.dataset.cost;
+    let cost = checkBox.dataset.cost;
 
     checkBox.addEventListener("change", event => {
         let pickedActivity = event.target,
@@ -134,7 +128,6 @@ Payment Info" section
 *****************************************/
 
 const selectPayment = document.querySelector('select#payment'),
-    paymentMethodOption = selectPayment.querySelector('[value^="select"]'),
     paymentCredit = document.querySelector('#credit-card'),
     paymentPaypal = document.querySelector('#paypal'),
     paymentBitcoin = document.querySelector('#bitcoin');
@@ -157,7 +150,7 @@ function resetPaymentPanels() {
 }
 
 // Disable the 1st option with instructions.
-paymentMethodOption.disabled = true;
+selectPayment[0].disabled = true;
 
 // Set default selection to credit-card.
 selectPayment.selectedIndex = 1;
@@ -173,15 +166,63 @@ Form validation
 *****************************************/
 const nameField = document.querySelector('input#name'),
     emailField = document.querySelector('input#mail'),
-    submitButton = document.querySelector('button[type="submit"'),
     creditCardNumber = document.querySelector('input#cc-num'),
     zipCode = document.querySelector('input#zip'),
-    cvv = document.querySelector('input#cvv');
+    cvv = document.querySelector('input#cvv'),
+    submitButton = document.querySelector('button[type="submit"');
 let errorMessage = null;
 
 // Speaks for itself.
 function validateRegEx(regex, element) {
     return regex.test(element.value);
+}
+
+// Add or remove error based on validation.
+function toggleError(validation, element, message) {
+    const errorClass = 'error',
+        p = document.createElement('p'),
+        sibling = element.nextElementSibling,
+        errorMessageClass = 'error-message',
+        controlErrorStyling = () => {
+            if (validation) {
+                element.classList.remove(errorClass);
+            } else {
+                element.classList.add(errorClass);
+            }
+        },
+        createMessage = (targetElement) => {
+            if (element.value === '') {
+                targetElement.innerText = 'This field cannot be empty.';
+            } else {
+                targetElement.innerText = message;
+            }
+        },
+        removeMessage = () => {
+            if (sibling) element.parentNode.removeChild(sibling);
+        },
+        controlErrorMessage = () => {
+            p.classList.add(errorMessageClass);
+            if (sibling) {
+                if (!validation && !sibling.classList.contains(errorMessageClass)) {
+                    element.parentNode.insertBefore(p, sibling);
+                    createMessage(p);
+                } else if (!validation && sibling.classList.contains(errorMessageClass)) {
+                    createMessage(sibling);
+                } else if (validation && sibling.classList.contains(errorMessageClass)) {
+                    removeMessage();
+                }
+            } else {
+                if (!validation) {
+                    element.parentNode.appendChild(p);
+                    createMessage(p);
+                } else if (validation) {
+                    removeMessage();
+                }
+            }
+        };
+
+    controlErrorStyling();
+    controlErrorMessage();
 }
 
 function validateName() {
@@ -222,57 +263,9 @@ function validateCvv() {
     toggleError(validateRegEx(/^\d{3}$/i, cvv), cvv, errorMessage);
 }
 
-// Add or remove error based on validation.
-function toggleError(validation, element, message) {
-    const errorClass = 'error',
-        p = document.createElement('p'),
-        sibling = element.nextElementSibling,
-        errorMessageClass = 'error-message',
-        controlErrorStyling = () => {
-            if (validation) {
-                element.classList.remove(errorClass);
-            } else {
-                element.classList.add(errorClass);
-            }
-        },
-        createMessage = (targetElement, message) => {
-            if (element.value === '') {
-                targetElement.innerText = 'This field cannot be empty.';
-            } else {
-                targetElement.innerText = message;
-            }
-        },
-        removeMessage = () => {
-            if (sibling) element.parentNode.removeChild(sibling);
-        },
-        controlErrorMessage = () => {
-            p.classList.add(errorMessageClass);
-            if (sibling) {
-                if (!validation && !sibling.classList.contains(errorMessageClass)) {
-                    element.parentNode.insertBefore(p, sibling);
-                    createMessage(p, message);
-                } else if (!validation && sibling.classList.contains(errorMessageClass)) {
-                    createMessage(sibling, message);
-                } else if (validation && sibling.classList.contains(errorMessageClass)) {
-                    removeMessage();
-                }
-            } else {
-                if (!validation) {
-                    element.parentNode.appendChild(p);
-                    createMessage(p, message);
-                } else if (validation) {
-                    removeMessage();
-                }
-            }
-        };
-
-    controlErrorStyling();
-    controlErrorMessage();
-}
-
 // Add validation to name field.
 nameField.addEventListener('input', validateName);
-nameField.addEventListener('blur',  validateName);
+nameField.addEventListener('blur', validateName);
 
 // Add validation to email field.
 emailField.addEventListener('input', validateEmail);
@@ -292,6 +285,7 @@ cvv.addEventListener('blur', validateCvv);
 
 // Add validation to submission of form.
 submitButton.addEventListener('click', event => {
+    event.preventDefault();
     validateName();
     validateEmail();
     validateActivities(); // Add credit-card validation only when correct payment method is selected.
@@ -299,14 +293,5 @@ submitButton.addEventListener('click', event => {
         validateCreditCardName();
         validateZip();
         validateCvv();
-    }
-    if (!validateCreditCardName() ||
-        !validateZip() ||
-        !validateCvv() ||
-        !validateName() ||
-        !validateEmail() ||
-        !validateActivities()) {
-        event.preventDefault();
-        console.log(paymentSelected);
     }
 });
