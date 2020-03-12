@@ -132,36 +132,41 @@ allCheckBoxes.forEach(checkBox => {
 /*****************************************
 Payment Info" section
 *****************************************/
+
 const selectPayment = document.querySelector('select#payment'),
     paymentMethodOption = selectPayment.querySelector('[value^="select"]'),
     paymentCredit = document.querySelector('#credit-card'),
     paymentPaypal = document.querySelector('#paypal'),
     paymentBitcoin = document.querySelector('#bitcoin');
+let paymentSelected = null;
 
-// Disable the 1st option with instructions.
-paymentMethodOption.disabled = true;
+function resetPaymentPanels() {
+    paymentSelected = selectPayment.value;
 
-// Hide all panels other than credit-card.
-paymentPaypal.style.display = 'none';
-paymentBitcoin.style.display = 'none';
-
-// Show and hide info panels / form based on payment select.
-selectPayment.addEventListener('change', () => {
     paymentCredit.style.display = 'none';
     paymentPaypal.style.display = 'none';
     paymentBitcoin.style.display = 'none';
 
-    if (selectPayment.selectedIndex == 1) {
+    if (paymentSelected == 'credit card') {
         paymentCredit.style.display = 'inherit';
-    } else if (selectPayment.selectedIndex == 2) {
+    } else if (paymentSelected == 'paypal') {
         paymentPaypal.style.display = 'inherit';
-    } else if (selectPayment.selectedIndex == 3) {
+    } else if (paymentSelected == 'bitcoin') {
         paymentBitcoin.style.display = 'inherit';
     }
-});
+}
+
+// Disable the 1st option with instructions.
+paymentMethodOption.disabled = true;
 
 // Set default selection to credit-card.
 selectPayment.selectedIndex = 1;
+
+// Hide all panels other than selected.
+resetPaymentPanels();
+
+// Show and hide info panels / form based on payment select.
+selectPayment.addEventListener('change', resetPaymentPanels);
 
 /*****************************************
 Form validation
@@ -266,56 +271,42 @@ function toggleError(validation, element, message) {
 }
 
 // Add validation to name field.
-nameField.addEventListener('input', () => {
-    validateName();
-});
-nameField.addEventListener('blur', () => {
-    validateName();
-});
+nameField.addEventListener('input', validateName);
+nameField.addEventListener('blur',  validateName);
 
 // Add validation to email field.
-emailField.addEventListener('input', () => {
-    validateEmail();
-});
-emailField.addEventListener('blur', () => {
-    validateEmail();
-});
+emailField.addEventListener('input', validateEmail);
+emailField.addEventListener('blur', validateEmail);
 
 // Add validation to credit card number field.
-creditCardNumber.addEventListener('input', () => {
-    validateCreditCardName();
-});
-creditCardNumber.addEventListener('blur', () => {
-    validateCreditCardName();
-});
+creditCardNumber.addEventListener('input', validateCreditCardName);
+creditCardNumber.addEventListener('blur', validateCreditCardName);
 
 // Add validation to zip code field.
-zipCode.addEventListener('input', () => {
-    validateZip();
-});
-zipCode.addEventListener('blur', () => {
-    validateZip();
-});
+zipCode.addEventListener('input', validateZip);
+zipCode.addEventListener('blur', validateZip);
 
 // Add validation to zip code field.
-cvv.addEventListener('input', () => {
-    validateCvv();
-});
-cvv.addEventListener('blur', () => {
-    validateCvv();
-});
+cvv.addEventListener('input', validateCvv);
+cvv.addEventListener('blur', validateCvv);
 
 // Add validation to submission of form.
 submitButton.addEventListener('click', event => {
-    event.preventDefault();
     validateName();
     validateEmail();
-    validateActivities();
-    // Add credit-card validation only when correct payment method is selected.
-    if (selectPayment.selectedIndex == 1) {
+    validateActivities(); // Add credit-card validation only when correct payment method is selected.
+    if (paymentSelected == 'credit card') {
         validateCreditCardName();
         validateZip();
         validateCvv();
     }
+    if (!validateCreditCardName() ||
+        !validateZip() ||
+        !validateCvv() ||
+        !validateName() ||
+        !validateEmail() ||
+        !validateActivities()) {
+        event.preventDefault();
+        console.log(paymentSelected);
+    }
 });
-
